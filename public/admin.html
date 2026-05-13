@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - AuraPrompts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding-bottom: 4rem; }
+
+        .admin-wrapper {
+            max-width: 100%;
+            margin: 3rem auto;
+            padding: 0 2%;
+        }
+
+        .admin-header {
+            text-align: center;
+            margin: 0 auto 2rem;
+            max-width: 800px;
+        }
+        .admin-header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .admin-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* ── Tabs ── */
+        .tab-bar {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 6px;
+            gap: 6px;
+            margin: 0 auto 1.8rem;
+            max-width: 800px;
+            border: 1px solid var(--border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            box-shadow: 0 4px 15px rgba(168,85,247,0.4);
+        }
+        .tab-btn:not(.active):hover {
+            color: var(--text-main);
+            background: var(--bg-color);
+        }
+
+        /* ── Panels ── */
+        .tab-panel { display: none; max-width: 800px; margin: 0 auto; }
+        .tab-panel.active { display: block; }
+
+        /* ── Card ── */
+        .admin-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.2rem;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+        }
+        .admin-card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+        }
+        .admin-card .sub {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-bottom: 1.8rem;
+        }
+
+        /* ── Form ── */
+        .form-group { margin-bottom: 1.4rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(168,85,247,0.15);
+        }
+
+        /* ── Image Drop Zone ── */
+        .drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: var(--bg-color);
+            position: relative;
+        }
+        .drop-zone:hover,
+        .drop-zone.drag-over {
+            border-color: var(--primary);
+            background: rgba(168,85,247,0.05);
+        }
+        .drop-zone input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        .drop-zone .dz-icon {
+            font-size: 3rem;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+        .drop-zone .dz-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+        .drop-zone .dz-sub {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .drop-zone .dz-preview {
+            display: none;
+            margin-top: 1rem;
+        }
+        .drop-zone .dz-preview img {
+            max-height: 200px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        .drop-zone.has-file .dz-placeholder { display: none; }
+        .drop-zone.has-file .dz-preview { display: block; }
+
+        /* ── Buttons ── */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            letter-spacing: 0.3px;
+            margin-top: 0.5rem;
+        }
+        .submit-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ── Loading ── */
+        .loading-box {
+            display: none;
+            text-align: center;
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            border-radius: 10px;
+            background: rgba(168,85,247,0.08);
+            border: 1px solid rgba(168,85,247,0.2);
+        }
+        .spinner {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+            border: 3px solid rgba(168,85,247,0.3);
+            border-top-color: #a855f7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 0.6rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-box p { color: var(--text-muted); font-size: 0.9rem; margin: 0; }
+
+        /* ── Status ── */
+        .status-msg {
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            min-height: 1.4rem;
+        }
+
+        /* ── Result Preview ── */
+        .result-card {
+            display: none;
+            margin-top: 1.8rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            overflow: hidden;
+            animation: fadeIn 0.4s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .result-card img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+        }
+        .result-card .result-body {
+            padding: 1.2rem 1.4rem;
+        }
+        .result-card h3 { margin-bottom: 0.4rem; font-size: 1.05rem; }
+        .result-card .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.7rem;
+            border-radius: 99px;
+            margin-bottom: 0.8rem;
+        }
+        .result-card .result-prompt {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        /* ── Manage Section ── */
+        .manage-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
+        }
+        .manage-card h2 { margin-bottom: 1.2rem; }
+        
+        #prompts-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .prompt-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.9rem 1rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: border-color 0.2s;
+        }
+        .prompt-item:hover { border-color: var(--primary); }
+        .prompt-item img {
+            width: 52px;
+            height: 52px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .prompt-item .info { flex: 1; overflow: hidden; }
+        .prompt-item .info strong {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 0.9rem;
+        }
+        .prompt-item .info span {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 700;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+        .delete-btn:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary)">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            Aura<span>Prompts</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">← Back to Website</a></li>
+        </ul>
+    </nav>
+
+    <div class="admin-wrapper">
+
+        <div class="admin-header">
+            <h1>⚡ Admin Panel</h1>
+            <p>Add prompts using AI magic or by uploading your own image.</p>
+        </div>
+
+        <!-- Tab Bar -->
+        <div class="tab-bar">
+            <button class="tab-btn active" onclick="switchTab('magic', this)" id="tab-magic">
+                ✨ Magic AI (Text)
+            </button>
+            <button class="tab-btn" onclick="switchTab('image', this)" id="tab-image">
+                🖼️ Image Analyzer
+            </button>
+            <button class="tab-btn" onclick="switchTab('cats', this)" id="tab-cats">
+                📂 Categories
+            </button>
+        </div>
+
+        <!-- ═══ TAB 1: Magic AI ═══ -->
+        <div class="tab-panel active" id="panel-magic">
+            <div class="admin-card">
+                <h2>✨ Magic AI Generator</h2>
+                <p class="sub">Type a basic idea → AI rewrites it → image generated → auto-published to your website.</p>
+
+                <form id="magic-form">
+                    <div class="form-group">
+                        <label>Your Basic Idea</label>
+                        <textarea id="base-prompt" rows="4" required placeholder="E.g., A cute girl holding a blue balloon in a sunflower field..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tag</label>
+                        <select id="magic-tag">
+                            <option value="Latest">Latest</option>
+                            <option value="Trending">Trending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category (optional override)</label>
+                        <select id="magic-category-override">
+                            <option value="">🤖 Let AI decide</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" id="magic-btn">✨ Generate & Publish Automatically</button>
+                </form>
+
+                <div class="loading-box" id="magic-loading">
+                    <div class="spinner"></div>
+                    <p>🧠 AI is writing your prompt and generating the image... (~15s)</p>
+                </div>
+                <div class="status-msg" id="magic-status"></div>
+
+                <div class="result-card" id="magic-result">
+                    <img id="magic-res-image" src="" alt="Generated">
+                    <div class="result-body">
+                        <h3 id="magic-res-title"></h3>
+                        <span class="badge" id="magic-res-category"></span>
+                        <p class="result-prompt" id="magic-res-prompt"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ TAB 2: Image Analyzer ═══ -->
+        <div class="tab-panel" id="panel-image">
+            <div class="admin-card">
+                <h2>🖼️ Image Analyzer</h2>
+                <p class="sub">Upload any image → Gemini AI analyzes it → auto-generates a detailed prompt, title & category → published to your website.</p>
+
+                <form id="image-form" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label>Upload Image</label>
+                        <div class="drop-zone" id="drop-zone">
+                            <input type="file" id="image-upload" name="image" accept="image/*" required>
+                            <div class="dz-placeholder">
+                                <span class="dz-icon">📸</span>
+                                <div class="dz-text">Click to upload or drag & drop</div>
+                                <div class="dz-sub">JPG, PNG, WEBP up to 10MB</div>
+                            </div>
+                            <div class="dz-preview">
+                                <img id="image-preview" src="" alt="Preview">
+                                <p style="margin-top: 0.5rem; font-size: 0.82rem; color: var(--text-muted);" id="file-name-display"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tag</label>
+                        <select id="image-tag">
+                            <option value="Latest">Latest</option>
+                            <option value="Trending">Trending</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Category (optional override)</label>
+                        <select id="image-category-override">
+                            <option value="">🤖 Let AI decide</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn" id="image-btn">🔍 Analyze Image & Publish</button>
+                </form>
+
+                <div class="loading-box" id="image-loading">
+                    <div class="spinner"></div>
+                    <p>🔍 Gemini is analyzing your image... (~10s)</p>
+                </div>
+                <div class="status-msg" id="image-status"></div>
+
+                <div class="result-card" id="image-result">
+                    <img id="image-res-image" src="" alt="Analyzed">
+                    <div class="result-body">
+                        <h3 id="image-res-title"></h3>
+                        <span class="badge" id="image-res-category"></span>
+                        <p class="result-prompt" id="image-res-prompt"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ TAB 3: Categories ═══ -->
+        <div class="tab-panel" id="panel-cats">
+            <div class="admin-card">
+                <h2>📂 Manage Categories</h2>
+                <p class="sub">Create, rename or delete categories. Renaming auto-updates all existing prompts.</p>
+
+                <!-- Add new -->
+                <div style="display:flex;gap:0.7rem;margin-bottom:1.8rem;">
+                    <input type="text" id="new-cat-input" placeholder="New category name..."
+                        style="flex:1;padding:0.85rem 1rem;background:var(--bg-color);border:1px solid var(--border);border-radius:10px;color:var(--text-main);font-family:inherit;font-size:0.95rem;outline:none;"
+                        onkeydown="if(event.key==='Enter') addCategory()">
+                    <button onclick="addCategory()" class="submit-btn" style="width:auto;padding:0.85rem 1.4rem;margin:0;">
+                        ➕ Add
+                    </button>
+                </div>
+
+                <div class="status-msg" id="cats-status"></div>
+
+                <!-- Category list -->
+                <div id="cats-list" style="display:flex;flex-direction:column;gap:0.6rem;margin-top:0.5rem;">
+                    <p style="color:var(--text-muted);">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ Manage Existing Prompts ═══ -->
+        <div class="manage-card">
+            <h2>🗂️ Manage Existing Prompts</h2>
+            <div id="prompts-list">
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Loading...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══ Edit/Replace Image Modal ═══ -->
+    <div id="edit-modal" style="
+        display: none;
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.75);
+        z-index: 1000;
+        backdrop-filter: blur(6px);
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    ">
+        <div style="
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+        ">
+            <button onclick="closeEditModal()" style="
+                position: absolute; top: 1rem; right: 1rem;
+                background: transparent; border: none;
+                color: var(--text-muted); font-size: 1.4rem;
+                cursor: pointer; line-height: 1;
+            ">✕</button>
+
+            <h2 style="margin-bottom: 0.3rem; font-size: 1.3rem;">✏️ Replace Image</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem;" id="edit-prompt-title"></p>
+
+            <div class="drop-zone" id="edit-drop-zone" style="margin-bottom: 1.2rem;">
+                <input type="file" id="edit-image-upload" accept="image/*">
+                <div class="dz-placeholder">
+                    <span class="dz-icon">🖼️</span>
+                    <div class="dz-text">Click or drag new image here</div>
+                    <div class="dz-sub">JPG, PNG, WEBP up to 10MB</div>
+                </div>
+                <div class="dz-preview">
+                    <img id="edit-image-preview" src="" alt="Preview">
+                    <p style="margin-top:0.5rem; font-size:0.8rem; color:var(--text-muted);" id="edit-file-name"></p>
+                </div>
+            </div>
+
+            <label style="display:flex; align-items:center; gap:0.7rem; margin-bottom:1.4rem; cursor:pointer;">
+                <input type="checkbox" id="edit-re-analyze" style="width:18px; height:18px; accent-color: var(--primary); cursor:pointer;">
+                <span style="font-size:0.9rem;">
+                    🔍 <strong>Re-analyze image</strong> — update prompt, title & category using Gemini AI
+                </span>
+            </label>
+
+            <button id="edit-submit-btn" onclick="submitReplaceImage()" class="submit-btn">💾 Save New Image</button>
+
+            <div class="loading-box" id="edit-loading" style="margin-top:1rem;">
+                <div class="spinner"></div>
+                <p id="edit-loading-text">Saving new image...</p>
+            </div>
+            <div class="status-msg" id="edit-status"></div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+    <script src="category-manager.js"></script>
+</body>
+</html>

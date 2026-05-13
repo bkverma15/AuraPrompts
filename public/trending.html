@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraPrompts - Premium AI Prompt Gallery</title>
+    <meta name="description" content="Discover, copy and share premium AI image generation prompts for Midjourney, DALL-E, Stable Diffusion and Gemini.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ── Navbar ── -->
+    <nav>
+        <a href="index.html" class="logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--primary)">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            Aura<span>Prompts</span>
+        </a>
+        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+        <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="nav-home">Home</a></li>
+            <li class="nav-item-dropdown">
+                <a>Categories ▾</a>
+                <div class="dropdown-menu" id="mega-menu-content">
+                    <!-- Categories loaded dynamically here -->
+                </div>
+            </li>
+            <li><a href="trending.html" class="nav-trending">Trending</a></li>
+            <li><a href="latest.html" class="nav-latest">Latest</a></li>
+            <li><a href="portraits.html" class="nav-portraits">Portraits</a></li>
+            <li><a href="cinematic.html" class="nav-cinematic">Cinematic</a></li>
+            <li><a href="admin.html" class="nav-admin-btn">⚡ Admin</a></li>
+        </ul>
+    </nav>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+        <div class="hero-badge">✨ AI Prompt Gallery</div>
+        <h1>Find the <span class="gradient-text">Perfect Prompt</span><br>For Your AI Art</h1>
+        <p class="hero-desc">Discover thousands of curated, ready-to-use prompts for Midjourney, DALL-E, Stable Diffusion & Gemini. Copy in one click.</p>
+
+        <div class="search-bar">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search prompts, styles, or categories...">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <!-- Quick filter tags -->
+        <div class="tags" id="filter-tags">
+            <span class="tag active-tag" data-cat="All">🌟 All</span>
+            <!-- Categories loaded dynamically here -->
+        </div>
+    </section>
+
+    <!-- ── Stats Bar ── -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-num" id="stat-total">0</span>
+            <span class="stat-label">Total Prompts</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-num">6</span>
+            <span class="stat-label">Categories</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-num">100%</span>
+            <span class="stat-label">Free to Copy</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <span class="stat-num">AI</span>
+            <span class="stat-label">Generated</span>
+        </div>
+    </div>
+
+    <!-- ── Main Content ── -->
+    <div class="main-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2>📂 Categories</h2>
+            <ul class="sidebar-cats" id="sidebar-cats-list">
+                <li class="sidebar-cat active-cat" data-cat="All">🌟 All Prompts</li>
+                <!-- Categories loaded dynamically here -->
+            </ul>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-cta">
+                <p>Want to add your own prompts?</p>
+                <a href="admin.html" class="sidebar-cta-btn">⚡ Open Admin Panel</a>
+            </div>
+        </aside>
+
+        <!-- Grid -->
+        <div class="grid-wrapper">
+            <div class="grid-header">
+                <h2 id="grid-title">All Prompts</h2>
+                <span class="grid-count" id="grid-count">Loading...</span>
+            </div>
+            <div class="grid" id="main-grid">
+                <!-- Dynamically populated by script.js -->
+            </div>
+            <div class="empty-state" id="empty-state" style="display:none;">
+                <div class="empty-icon">🔮</div>
+                <h3>No prompts found</h3>
+                <p>Try a different search or category</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Footer ── -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <a href="index.html" class="logo" style="margin-bottom:0.5rem;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Aura<span>Prompts</span>
+            </a>
+            <p class="footer-desc">Premium AI prompt gallery for creators & artists.</p>
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="trending.html">Trending</a>
+                <a href="latest.html">Latest</a>
+                <a href="admin.html">Admin</a>
+            </div>
+            <p class="footer-copy">© 2025 AuraPrompts · Built with ✨ AI</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
